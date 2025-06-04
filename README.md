@@ -1,50 +1,46 @@
-# 🔍 Nmap Device Discovery Script
+# 🔍 Nmap Secure Log Script
 
-A lightweight Bash script that scans a target IP address using Nmap's `discovery` scripts to help identify what kind of device it is (e.g., camera, printer, router, Windows PC, etc.).  
-Each scan is automatically saved to a timestamped log file for easy archiving and review.
+This script runs an Nmap scan against a specified target IP address and securely stores the scan results in a password-protected log file.
 
----
+## 🚀 Features
 
-## 📁 Project Structure
+- Prompts user for a target IP address to scan.
+- Creates a `logs/` directory if it doesn't exist.
+- Prompts for a password if the `logs/` directory is being created for the first time.
+- Encrypts each Nmap scan result using `zip` with password protection.
+- Automatically deletes the unencrypted `.log` file after encryption.
+- Password is stored securely in `.log_password` inside the `logs/` folder (for reuse across scans).
 
-├── nmap_device_scan.sh # Main script
+## 🔒 Security Note
 
-└── logs/ # (Optional) Store all scan outputs here
-
----
-
-## 🛠️ Features
-
-- Prompts you for a target IP interactively
-- Uses `nmap -sV --script discovery` for deep service fingerprinting
-- Saves results to a log file named like:  
-  `nmap_scan_<ip>_YYYY-MM-DD_HH-MM-SS.log`
-- Simple, beginner-friendly Bash code
+> The password is stored in a hidden file inside the `logs/` folder for convenience. This is not secure for production environments. Consider using GPG or another encryption tool for enhanced security.
 
 ---
 
-## 🚀 Getting Started
+## 🧰 Requirements
 
-### 🔧 Prerequisites
+Make sure the following dependencies are installed:
 
-- Linux or macOS terminal (or WSL on Windows)
-- `nmap` must be installed  
-  Install with:
-  ```bash
-  sudo apt install nmap   # Ubuntu/Debian
-  sudo dnf install nmap   # Fedora
-  brew install nmap       # macOS
+- `nmap`
+- `zip`
 
-## 🔧 Step 1: Clone the repo
+### Install Dependencies (Ubuntu/Debian)
+
+    sudo apt update
+    sudo apt install nmap zip -y  # Ubuntu/Debian
+    sudo dnf install nmap zip -y  # Fedora
+    brew install nmap zip         # macOS
+
+### 🔧 Step 1: Clone the repo
 
     sudo git clone https://github.com/iamapurvapatel/Nmap-Device-Discovery-Script.git
     cd Nmap-Device-Discovery-Script
 
-## 🔧 Step 2: Make the script executable
+### 🔧 Step 2: Make the script executable
 
     sudo chmod +x nmap_device_scan.sh
 
-## ▶️ Step 3: Run it
+### ▶️ Step 3: Run it
 
     sudo ./nmap_device_scan.sh
     
@@ -53,3 +49,9 @@ Each scan is automatically saved to a timestamped log file for easy archiving an
     Enter target IP address: 192.168.x.x
     [*] Scanning 192.168.x.x, output will be saved to nmap_scan_<ip>_YYYY-MM-DD_HH-MM-SS.log
     [+] Scan complete. Results saved to nmap_scan_<ip>_YYYY-MM-DD_HH-MM-SS.log
+
+### To extract a scan result:
+
+    unzip logs/nmap_scan_<target>_<timestamp>.log.zip
+
+
